@@ -1,144 +1,132 @@
-# Application Building Lab 3
+# Application Building Lab 1
 
 ## Instructions
 
-Using the same patterns we've used so far, replace the data in the conversation
-thread component with dynamic data read from variables defined in the
-component's controllers.
+Following the same process we did for Level 1 and Level 2 components, add all
+the components into their target location using their respective selection. A
+couple of things to remember:
 
-As before, try your best to do this on your own before looking at the code
-provided here for reference.
+1. Use Bootstrap-based layout to position the component where it should be in
+   its parent component
+2. When a component is inside another `container` `div`, its "100%" or "12
+   columns" of layout are inside that container's space
+3. Use the Bootstrap's column layout to position the sender's messages to the
+   left of the conversation history panel and to position the user's messages to
+   the right of the conversation history panel
 
-The steps are:
+You should end up with an application that looks like this:
 
-1. Add a `senderMessages` array to `conversation-thread-component.component.ts`
-2. Add a `userMessages` array to `conversation-thread-component.component.ts`
-   > We will have additional work to do to figure out how to show the messages
-   > in the right sequence, but we will handle that later in the source
-3. Modify the `conversation-thread-component.comopnent.html` view to use both
-   arrays defined in the model
-4. Add a `message` variable in the `user-message-component.component.ts` file.
-   Make sure to tag it with the `@Input` annotation, so you can set its value in
-   the parent component's view
-5. Modify the `user-message-component.component.html` view to use the
-   `message.text` property instead of hardcoded text
+![All the components in their basic layout](https://curriculum-content.s3.amazonaws.com/java-mod-8/ng-messaging-full-component-layout.png)
+
+Take some time to do this on your own. We'll include the solution here, as we
+will be building on it as we progress in this section.
 
 ## Solution
 
-When you're done with your changes, your source files will look like this:
-
-### `conversation-thread-component.component.ts`
-
-```typescript
-import { Component, OnInit } from "@angular/core";
-
-@Component({
-  selector: "app-conversation-thread-component",
-  templateUrl: "./conversation-thread-component.component.html",
-  styleUrls: ["./conversation-thread-component.component.css"],
-})
-export class ConversationThreadComponentComponent implements OnInit {
-  senderMessages = [
-    {
-      sender: { firstName: "Ludovic" },
-      text: "Message from Ludovic",
-      conversationId: 1,
-      sequenceNumber: 0,
-    },
-    {
-      sender: { firstName: "Jessica" },
-      text: "Message from Jessica",
-      conversationId: 1,
-      sequenceNumber: 1,
-    },
-  ];
-
-  userMessages = [
-    {
-      sender: { firstName: "Aurelie" },
-      text: "Message from Aurelie",
-      conversationId: 1,
-      sequenceNumber: 2,
-    },
-  ];
-  constructor() {}
-
-  ngOnInit(): void {}
-}
-```
-
-### `conversation-thread-component.component.html`
-
-```html
-<div class="container">
-  <div class="row" *ngFor="let senderMessage of senderMessages">
-    <div class="col-9 p-3">
-      <app-sender-message-component
-        [message]="senderMessage"
-      ></app-sender-message-component>
-    </div>
-  </div>
-</div>
-
-<div class="container">
-  <div class="row" *ngFor="let userMessage of userMessages">
-    <div class="col-3 p-3"></div>
-    <div class="col-9 p-3">
-      <app-user-message-component
-        [message]="userMessage"
-      ></app-user-message-component>
-    </div>
-  </div>
-</div>
-```
-
-### `user-message-component.component.ts`
-
-```typescript
-import { Component, Input, OnInit } from "@angular/core";
-
-@Component({
-  selector: "app-user-message-component",
-  templateUrl: "./user-message-component.component.html",
-  styleUrls: ["./user-message-component.component.css"],
-})
-export class UserMessageComponentComponent implements OnInit {
-  @Input() message = {
-    sender: { firstName: "Ludovic" },
-    text: "Message from Ludovic",
-    conversationId: 1,
-    sequenceNumber: 0,
-  };
-
-  constructor() {}
-
-  ngOnInit(): void {}
-}
-```
-
-### `user-message-component.component.html`
+ere is your updated `application-component.component.html` view:
 
 ```html
 <div class="container">
   <div class="row">
-    <div class="col-2 p-3"></div>
-    <div class="col-10 p-3 border rounded-5">
-      <span>{{message.text}}</span>
+    <div class="col-12 border p-3">
+      <app-conversation-control-component></app-conversation-control-component>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-12 border p-3">
+      <app-conversation-history-component></app-conversation-history-component>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-12 border p-3">
+      <app-contact-list-component></app-contact-list-component>
     </div>
   </div>
 </div>
 ```
 
-Now you have an application that:
+Here is your updated `conversation-history-component.component.html` view:
 
-1. Leverages Bootstrap to have the target layout
-2. Leverages Bootstrap for basic styling
-3. Leverages Angular data binding to read data dynamic from TypeScript code
-   instead of hardcoding it in HTML
-4. Leverages Angular directives to modify the DOM by looping through arrays and
-   using conditionals to decide whether or not to display specific values or
-   text
+```html
+<p>conversation-history-component works!</p>
 
-We've successfully used our current Angular knowledge to create a strong
-foundation for our application. In order to add real functionality, however, we
-need to dive deeper into Angular features.
+<div class="container">
+  <div class="row">
+    <div class="col-12 p-3">List of users in this thread</div>
+  </div>
+  <div class="row">
+    <div class="col-12 border p-3">
+      <app-conversation-thread-component></app-conversation-thread-component>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-12 border p-3">
+      <app-send-message-component></app-send-message-component>
+    </div>
+  </div>
+</div>
+```
+
+> Note: we added a new row in the first container to have the text that
+> indicates what users are in the current thread
+
+Here is your updated `conversation-thread-component.component.html` view:
+
+```html
+<p>conversation-thread-component works!</p>
+
+<div class="container">
+  <div class="row">
+    <div class="col-9 border p-3">
+      <app-sender-message-component></app-sender-message-component>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-9 border p-3">
+      <app-sender-message-component></app-sender-message-component>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-3 border p-3"></div>
+    <div class="col-9 border p-3">
+      <app-user-message-component></app-user-message-component>
+    </div>
+  </div>
+</div>
+```
+
+> Note: we added the `app-sender-message-component` twice to give a visual
+> indication that corresponds to the wireframe of the application
+
+Here is your updated `contact-list-component.component.html` view:
+
+```html
+<p>contact-list-component works!</p>
+
+<div class="row">
+  <div class="col-12 border p-3">
+    <app-contact-component></app-contact-component>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12 border p-3">
+    <app-contact-component></app-contact-component>
+  </div>
+</div>
+```
+
+> Note: we also added the `contact-component` twice to give an idea of what
+> multiple contacts would look like
